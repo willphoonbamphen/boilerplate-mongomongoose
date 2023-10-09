@@ -1,11 +1,36 @@
 require('dotenv').config();
 
+/** # MONGOOSE SETUP #
+/*  ================== */
 
-let Person;
+/** 1) Install & Set up mongoose */
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+/*mongoose.connect(process.env.MONGO_URI);*/
+
+var Schema = mongoose.Schema;
+var personSchema = new Schema({
+  name: { type: String, required: true },
+  age: Number,
+  favoriteFoods: [String]
+});
+var Person = mongoose.model("Person", personSchema);
+
+var createAndSavePerson = function(done) {
+  var janeFonda = new Person({
+    name: "Jane Fonda",
+    age: 84,
+    favoriteFoods: ["eggs", "fish", "fresh fruit"]
+  });
+  janeFonda.save(function(err, data) {
+    if (err) return console.error(err);
+    done(null, data)
+  });
 };
+
+
+let Person11;
 
 const createManyPeople = (arrayOfPeople, done) => {
   done(null /*, data*/);
@@ -68,3 +93,4 @@ exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
 exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
+
